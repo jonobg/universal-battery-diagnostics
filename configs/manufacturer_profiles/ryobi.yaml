@@ -1,0 +1,50 @@
+# Ryobi Battery Protocol Configuration
+# ONE+ and 40V platform support
+
+manufacturer:
+  name: "Ryobi"
+  display_name: "Ryobi Power Tools"
+  supported_platforms:
+    - "ONE+" # 18V platform
+    - "40V"  # 40V platform
+  primary_protocol: "ryobi_one_plus"
+
+# Communication Settings
+communication:
+  protocol_type: "uart_custom"
+  baud_rate: 38400
+  data_bits: 8
+  parity: "even"
+  stop_bits: 1
+  timeout_ms: 1000
+  voltage_levels:
+    logic_low: 0.0
+    logic_high: 3.3
+    battery_communication: 3.3
+
+# Authentication & Initialization
+authentication:
+  required: true
+  wake_sequence: [0x52, 0x59, 0x4F]  # "RYO" wake
+  init_sequence: [0x41, 0x42, 0x00]  # Auth with key 0x42
+  auth_response: [0x52, 0x4F]        # "RO" response
+  auth_timeout_ms: 800
+
+# Model Detection Database
+models:
+  18_6000: "P193"      # 18V 6.0Ah HP
+  18_4000: "P191"      # 18V 4.0Ah HP
+  18_2500: "P108"      # 18V 2.5Ah
+  18_1500: "P107"      # 18V 1.5Ah
+  18_1300: "P102"      # 18V 1.3Ah
+  40_6000: "OP4060A"   # 40V 6.0Ah
+  40_4000: "OP4040"    # 40V 4.0Ah
+  40_2600: "OP4026"    # 40V 2.6Ah
+
+# Health Calculation Parameters
+health_metrics:
+  cell_imbalance_threshold_mv: 40
+  capacity_warning_threshold: 70
+  capacity_critical_threshold: 50
+  cycle_life_estimate: 1000
+  deep_cycle_penalty: 2  # Deep cycles count as 2x regular cycles

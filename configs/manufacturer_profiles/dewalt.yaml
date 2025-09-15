@@ -1,0 +1,54 @@
+# DeWalt Battery Protocol Configuration
+# 20V MAX XR and FLEXVOLT platform support
+
+manufacturer:
+  name: "DeWalt"
+  display_name: "DeWalt Industrial Tool Co."
+  supported_platforms:
+    - "20V MAX XR"
+    - "FLEXVOLT"
+    - "12V MAX"
+  primary_protocol: "dewalt_xr"
+
+# Communication Settings
+communication:
+  protocol_type: "i2c_smbus"
+  baud_rate: 9600
+  data_bits: 8
+  parity: "none"
+  stop_bits: 1
+  timeout_ms: 1500
+  i2c_address: 0x0B
+  voltage_levels:
+    logic_low: 0.0
+    logic_high: 3.3
+    battery_communication: 3.3
+
+# Authentication & Initialization
+authentication:
+  required: true
+  wake_sequence: []
+  init_sequence: [0xDE, 0xA1, 0x7E]  # DeWalt auth
+  auth_timeout_ms: 1000
+
+# Model Detection Logic
+model_detection:
+  voltage_based: true
+  capacity_based: true
+  models:
+    18000_9000: "DCB609"    # FLEXVOLT 9.0Ah
+    18000_6000: "DCB606"    # FLEXVOLT 6.0Ah  
+    18000_5000: "DCB205"    # 20V MAX XR 5.0Ah
+    18000_4000: "DCB204"    # 20V MAX XR 4.0Ah
+    18000_2000: "DCB203"    # 20V MAX XR 2.0Ah
+    18000_1300: "DCB201"    # 20V MAX 1.3Ah
+    12000_3000: "DCB127"    # 12V MAX 3.0Ah
+    12000_1300: "DCB120"    # 12V MAX 1.3Ah
+
+# Health Calculation Parameters
+health_metrics:
+  cell_imbalance_threshold_mv: 50
+  capacity_warning_threshold: 75
+  capacity_critical_threshold: 60
+  cycle_life_estimate: 1500
+  resistance_max_mohm: 300

@@ -1,0 +1,41 @@
+# Comprehensive Analysis Preset
+# Complete diagnostic analysis with predictive modeling
+
+preset:
+  name: "Comprehensive Analysis" 
+  description: "Complete battery diagnostic with trend analysis and predictions"
+  estimated_duration_seconds: 300
+  priority: "medium"
+
+# Complete Register Scan
+registers:
+  scan_mode: "all_available"
+  milwaukee_m18: "all_184_registers"
+  others: "manufacturer_specific_complete"
+
+# Advanced Analysis Features
+analysis:
+  cell_balance_analysis: true
+  capacity_degradation_modeling: true
+  discharge_pattern_analysis: true
+  temperature_correlation: true
+  usage_pattern_detection: true
+  predictive_lifespan_modeling: true
+  comparative_peer_analysis: true
+  environmental_impact_assessment: true
+
+# Machine Learning Components
+machine_learning:
+  enabled: true
+  degradation_prediction: true
+  anomaly_detection: true
+  failure_classification: true
+  clustering_analysis: true
+
+# Output Configuration
+output:
+  format: "detailed_report"
+  include_charts: true
+  generate_pdf: true
+  save_raw_data: true
+  community_contribution: true

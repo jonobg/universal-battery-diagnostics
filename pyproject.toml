@@ -1,0 +1,130 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-battery-diagnostics"
+version = "0.1.0"
+description = "Professional multi-manufacturer battery diagnostics framework"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Battery Reverse Engineering Community"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Hardware",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "pandas>=1.3.0",
+    "matplotlib>=3.5.0",
+    "seaborn>=0.11.0",
+    "plotly>=5.0.0",
+    "scipy>=1.7.0",
+    "scikit-learn>=1.0.0",
+    "pyserial>=3.5",
+    "pydantic>=1.8.0",
+    "click>=8.0.0",
+    "rich>=12.0.0",
+    "pyyaml>=6.0",
+    "sqlalchemy>=1.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.8.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=0.991",
+    "pre-commit>=2.20.0",
+]
+docs = [
+    "mkdocs>=1.4.0",
+    "mkdocs-material>=8.5.0",
+    "mkdocstrings[python]>=0.19.0",
+]
+hardware = [
+    "pyftdi>=0.54.0",
+    "bleak>=0.19.0",  # Bluetooth LE
+    "smbus2>=0.4.0",  # I2C
+]
+
+[project.urls]
+Homepage = "https://github.com/battery-reverse-engineering/universal-battery-diagnostics"
+Repository = "https://github.com/battery-reverse-engineering/universal-battery-diagnostics.git"
+Documentation = "https://universal-battery-diagnostics.readthedocs.io/"
+"Bug Tracker" = "https://github.com/battery-reverse-engineering/universal-battery-diagnostics/issues"
+
+[project.scripts]
+ubdf = "ubdf.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ubdf*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "hardware: tests requiring actual hardware",
+    "slow: slow running tests",
+    "integration: integration tests",
+    "manufacturer: manufacturer-specific tests",
+    "milwaukee: Milwaukee-specific tests",
+    "makita: Makita-specific tests",
+    "dewalt: DeWalt-specific tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "serial.*",
+    "plotly.*", 
+    "matplotlib.*",
+    "seaborn.*",
+]
+ignore_missing_imports = true

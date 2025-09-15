@@ -1,0 +1,123 @@
+# Universal Battery Diagnostics Framework Configuration
+# Professional battery diagnostics and fleet management platform
+
+# Application Settings
+app:
+  name: "Universal Battery Diagnostics Framework"
+  version: "0.1.0"
+  environment: "production"  # development, testing, production
+  debug: false
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+# Database Configuration
+database:
+  type: "sqlite"  # sqlite, postgresql, mysql
+  path: "data/databases/ubdf_main.db"
+  backup_enabled: true
+  backup_interval_hours: 24
+  backup_retention_days: 30
+  auto_vacuum: true
+  foreign_keys: true
+
+# Hardware Communication
+hardware:
+  default_timeout_ms: 5000
+  max_retries: 3
+  retry_delay_ms: 100
+  connection_pool_size: 5
+  auto_discovery: true
+  simulation_mode: false  # Use mock hardware for testing
+
+# Supported Manufacturers
+manufacturers:
+  enabled:
+    - milwaukee
+    - makita
+    - dewalt
+    - ryobi
+  default_profiles: true
+  custom_profiles_dir: "configs/manufacturer_profiles"
+
+# Analysis Settings
+analysis:
+  health_threshold_warning: 70  # Health score below this triggers warning
+  health_threshold_critical: 50  # Health score below this triggers critical alert
+  cell_imbalance_threshold_mv: 30  # Cell imbalance above this triggers warning
+  cycle_count_estimation_enabled: true
+  predictive_analytics_enabled: true
+  environmental_correlation_enabled: true
+
+# Visualization Configuration
+visualization:
+  default_theme: "plotly_white"  # plotly, plotly_white, plotly_dark, ggplot2, seaborn
+  interactive_plots: true
+  export_formats: ["html", "png", "pdf"]
+  dashboard_auto_refresh: true
+  dashboard_refresh_interval_seconds: 30
+
+# Data Export Settings
+export:
+  default_format: "json"  # json, csv, excel, xml
+  include_raw_data: true
+  include_metadata: true
+  anonymize_serial_numbers: false
+  compression_enabled: true
+  max_file_size_mb: 100
+
+# Community Integration
+community:
+  data_sharing_enabled: false
+  anonymize_submissions: true
+  contribution_tracking: true
+  google_forms_integration: false
+
+# CLI Settings
+cli:
+  default_output_format: "table"  # table, json, yaml, csv
+  progress_bars: true
+  colored_output: true
+  verbose_mode: false
+  interactive_prompts: true
+
+# Security Settings
+security:
+  hash_algorithm: "sha256"
+  encryption_enabled: false
+  api_rate_limiting: true
+  session_timeout_minutes: 60
+
+# Performance Settings
+performance:
+  cache_enabled: true
+  cache_size_mb: 100
+  parallel_processing: true
+  max_workers: 4
+  memory_limit_mb: 512
+
+# Paths Configuration
+paths:
+  data_dir: "data"
+  reports_dir: "data/reports"
+  exports_dir: "data/exports"
+  cache_dir: "data/cache"
+  logs_dir: "logs"
+  temp_dir: "temp"
+
+# Logging Configuration
+logging:
+  enabled: true
+  file_logging: true
+  console_logging: true
+  log_file: "logs/ubdf.log"
+  max_log_file_size_mb: 10
+  log_rotation_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Advanced Features
+advanced:
+  machine_learning_enabled: false
+  predictive_modeling: false
+  anomaly_detection: false
+  real_time_monitoring: false
+  web_dashboard: false
+  api_server: false

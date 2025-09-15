@@ -1,0 +1,27 @@
+# Development Dependencies for Universal Battery Diagnostics Framework
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.8.0
+pytest-asyncio>=0.21.0
+
+# Code Quality
+black>=22.0.0
+flake8>=5.0.0
+mypy>=0.991
+pre-commit>=2.20.0
+
+# Documentation
+mkdocs>=1.4.0
+mkdocs-material>=8.5.0
+mkdocstrings[python]>=0.19.0
+
+# Hardware Extensions (optional)
+pyftdi>=0.54.0      # USB-to-serial adapters
+bleak>=0.19.0       # Bluetooth LE
+smbus2>=0.4.0       # I2C communication
+
+# Build tools
+build>=0.8.0
+twine>=4.0.0

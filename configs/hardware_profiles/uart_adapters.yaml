@@ -1,0 +1,106 @@
+# UART Adapter Hardware Profiles
+# Configuration for various USB-to-Serial adapters used in battery diagnostics
+
+adapters:
+  # Recommended adapters with verified compatibility
+  ftdi_ft232rl:
+    name: "FTDI FT232RL"
+    description: "Professional USB-to-Serial with break condition support"
+    compatibility_rating: "excellent"
+    voltage_levels: [3.3, 5.0]
+    max_baud_rate: 3000000
+    break_condition_support: true
+    driver_notes: "Use genuine FTDI chips - avoid counterfeits"
+    level_shifter_required: true
+    recommended_level_shifter: "74HC4050"
+    
+  prolific_pl2303:
+    name: "Prolific PL2303"
+    description: "Common USB-to-Serial adapter"
+    compatibility_rating: "good"
+    voltage_levels: [3.3, 5.0]
+    max_baud_rate: 1000000
+    break_condition_support: false
+    driver_notes: "May require specific driver version"
+    level_shifter_required: true
+    
+  cp2102_silabs:
+    name: "Silicon Labs CP2102"
+    description: "Reliable USB-to-Serial converter"
+    compatibility_rating: "excellent"
+    voltage_levels: [3.3]
+    max_baud_rate: 1000000
+    break_condition_support: true
+    driver_notes: "Windows auto-installs drivers"
+    level_shifter_required: true
+
+# Level Shifter Configurations
+level_shifters:
+  hc4050_buffer:
+    name: "74HC4050 Hex Buffer"
+    description: "Non-inverting buffer for 3.3V to 8V level shifting"
+    input_voltage: 3.3
+    output_voltage: 8.0
+    channels: 6
+    setup_notes: "Connect VCC to 8V, input from UART TX"
+    
+  mosfet_discrete:
+    name: "N-Channel MOSFET"
+    description: "Simple MOSFET level shifter"
+    input_voltage: 3.3
+    output_voltage: 8.0
+    channels: 1
+    setup_notes: "Pull-up resistor to 8V required"
+
+# Connection Profiles per Manufacturer
+connection_profiles:
+  milwaukee_m18:
+    required_voltage: 8.0
+    signal_type: "UART"
+    pins:
+      - name: "GND"
+        description: "Battery ground"
+        color: "black"
+      - name: "COMM"
+        description: "Communication line (8V logic)"
+        color: "white"
+      - name: "+BATT"
+        description: "Battery positive (monitoring only)"
+        color: "red"
+    
+  makita_lxt:
+    required_voltage: 3.3
+    signal_type: "CAN-based UART"
+    pins:
+      - name: "GND"
+        description: "Battery ground"
+      - name: "COMM"
+        description: "Communication line (3.3V logic)"
+        
+  dewalt_xr:
+    required_voltage: 3.3
+    signal_type: "I2C/SMBus"
+    pins:
+      - name: "GND"
+        description: "Battery ground"
+      - name: "SDA"
+        description: "I2C data line"
+      - name: "SCL"
+        description: "I2C clock line"
+
+# Testing and Validation
+testing:
+  voltage_verification:
+    - "Measure logic levels with multimeter"
+    - "Verify 8V output for Milwaukee adapters"
+    - "Check signal integrity with oscilloscope"
+    
+  communication_test:
+    - "Send basic ping command"
+    - "Verify checksum validation"
+    - "Test retry logic on timeout"
+    
+  safety_checks:
+    - "Current limiting to prevent damage"
+    - "Overcurrent protection"
+    - "Proper grounding"

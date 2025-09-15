@@ -1,0 +1,70 @@
+# Quick Health Check Analysis Preset
+# Fast diagnostic scan for basic battery health assessment
+
+preset:
+  name: "Quick Health Check"
+  description: "Fast 30-second health assessment focusing on critical metrics"
+  estimated_duration_seconds: 30
+  priority: "high"
+
+# Register Selection Strategy
+registers:
+  milwaukee_m18:
+    - 0x04  # Pack voltage
+    - 0x0C  # Cell voltages (5 cells)
+    - 0x1E  # Cycle count
+    - 0x47  # Capacity percentage
+    - 0x46  # Internal resistance
+  
+  makita_lxt:
+    - 0x20  # Pack voltage
+    - 0x21  # Cell voltages
+    - 0x43  # State of charge
+    - 0x44  # State of health
+    - 0x50  # Cycle count
+    
+  dewalt_xr:
+    - 0x02  # Voltage
+    - 0x06  # Relative SOC
+    - 0x10  # Cycle count
+    - 0x20  # Cell voltage 1
+    - 0x21  # Cell voltage 2
+    
+  ryobi_one_plus:
+    - 0x10  # Pack voltage
+    - 0x30  # State of charge
+    - 0x40  # Cycle count
+    - 0x12  # Cell voltage 1
+    - 0x13  # Cell voltage 2
+
+# Analysis Parameters
+analysis:
+  cell_balance_check: true
+  capacity_estimation: true
+  health_scoring: true
+  warranty_assessment: false
+  detailed_usage_analysis: false
+
+# Health Thresholds
+thresholds:
+  cell_imbalance_warning_mv: 30
+  cell_imbalance_critical_mv: 50
+  capacity_warning_percent: 70
+  capacity_critical_percent: 50
+  cycle_count_high: 500
+  cycle_count_critical: 800
+
+# Output Configuration
+output:
+  format: "summary"
+  include_recommendations: true
+  include_charts: false
+  save_to_database: true
+  generate_report: false
+
+# Alerts and Notifications
+alerts:
+  email_notifications: false
+  warranty_warnings: true
+  safety_alerts: true
+  maintenance_reminders: false

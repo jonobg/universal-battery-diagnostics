@@ -1,0 +1,59 @@
+# Makita Battery Protocol Configuration
+# LXT and XGT platform support
+
+manufacturer:
+  name: "Makita"
+  display_name: "Makita Corporation"
+  supported_platforms:
+    - "LXT" # 18V platform
+    - "XGT" # 40V platform
+  primary_protocol: "makita_lxt"
+
+# Communication Settings
+communication:
+  protocol_type: "uart_can"
+  baud_rate: 19200
+  data_bits: 8
+  parity: "none"
+  stop_bits: 1
+  timeout_ms: 2000
+  voltage_levels:
+    logic_low: 0.0
+    logic_high: 3.3
+    battery_communication: 3.3
+
+# Authentication & Initialization
+authentication:
+  required: true
+  wake_sequence: [0x47, 0x4D, 0x00]  # "GM" wake
+  init_sequence: [0x55, 0xAA, 0x01]
+  auth_response: [0x4D, 0x4B]  # "MK" response
+  auth_timeout_ms: 1500
+
+# Model Detection Database
+models:
+  0x1830: "BL1830B"  # 18V 3.0Ah
+  0x1840: "BL1840B"  # 18V 4.0Ah
+  0x1850: "BL1850B"  # 18V 5.0Ah
+  0x1860: "BL1860B"  # 18V 6.0Ah
+  0x3640: "BL3640"   # 36V 4.0Ah
+  0x3650: "BL3650"   # 36V 5.0Ah
+  0x4050: "BL4050F"  # 40V 5.0Ah
+
+# Health Calculation Parameters
+health_metrics:
+  cell_imbalance_threshold_mv: 25
+  capacity_warning_threshold: 75
+  capacity_critical_threshold: 55
+  cycle_life_estimate: 1000
+  resistance_max_mohm: 500
+
+# Diagnostic Presets
+diagnostic_presets:
+  quick_health:
+    registers: [0x20, 0x21, 0x43, 0x44, 0x50]
+    description: "Quick health - voltage, SOC, SOH, cycles"
+    
+  full_diagnostic:
+    registers: "all"
+    description: "Complete LXT diagnostic scan"
