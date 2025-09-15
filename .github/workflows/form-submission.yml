@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: jonobg/battery-data-collection
-        token: ${{ secrets.DATA_REPO_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         path: data-repo
     
     - name: Setup Python
@@ -88,30 +88,21 @@ jobs:
         with open(f"{submission_dir}/metadata.json", 'w') as f:
             json.dump(metadata, f, indent=2)
         
-        # Create README
-        readme_content = f"""# Battery Submission {submission_id}
-
-**Submitted:** {timestamp}
-**Manufacturer:** {payload.get('manufacturer', 'Unknown')}
-**Battery Model:** {payload.get('battery-model', 'Unknown')}
-**Device Type:** {payload.get('device-type', 'Unknown')}
-
-## Files
-
-- `metadata.json` - Structured submission metadata
-- `logs/` - Directory containing uploaded diagnostic files
-
-## Hardware Setup
-
-{payload.get('hardware-info', 'No hardware information provided.')}
-
-## Additional Notes
-
-{payload.get('notes', 'No additional notes provided.')}
-
----
-*This submission was created via the UBDF web form and requires manual file upload.*
-"""
+        # Create README - using string concatenation to avoid YAML parsing issues
+        readme_content = "# Battery Submission " + submission_id + "\n\n"
+        readme_content += "**Submitted:** " + timestamp + "\n"
+        readme_content += "**Manufacturer:** " + payload.get('manufacturer', 'Unknown') + "\n"
+        readme_content += "**Battery Model:** " + payload.get('battery-model', 'Unknown') + "\n"
+        readme_content += "**Device Type:** " + payload.get('device-type', 'Unknown') + "\n\n"
+        readme_content += "## Files\n\n"
+        readme_content += "- `metadata.json` - Structured submission metadata\n"
+        readme_content += "- `logs/` - Directory containing uploaded diagnostic files\n\n"
+        readme_content += "## Hardware Setup\n\n"
+        readme_content += payload.get('hardware-info', 'No hardware information provided.') + "\n\n"
+        readme_content += "## Additional Notes\n\n"
+        readme_content += payload.get('notes', 'No additional notes provided.') + "\n\n"
+        readme_content += "---\n"
+        readme_content += "*This submission was created via the UBDF web form and requires manual file upload.*\n"
         
         with open(f"{submission_dir}/README.md", 'w') as f:
             f.write(readme_content)
@@ -134,7 +125,7 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         path: data-repo
-        token: ${{ secrets.DATA_REPO_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "Add battery submission ${{ steps.process.outputs.submission_id }}"
         title: "Battery Submission: ${{ steps.process.outputs.manufacturer }} ${{ steps.process.outputs.battery_model }}"
         body: |
