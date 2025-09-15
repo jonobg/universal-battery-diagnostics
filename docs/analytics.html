@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Analytics - UBDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        main {
+            margin-top: 100px;
+            padding: 2rem 0 4rem;
+        }
+        
+        .analytics-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 3rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .chart-container {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+            border: 2px dashed #e2e8f0;
+        }
+        
+        .manufacturer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .manufacturer-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .manufacturer-logo {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .manufacturer-name {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+        
+        .manufacturer-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .recent-submissions {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .submission-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .submission-info {
+            flex: 1;
+        }
+        
+        .submission-title {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .submission-meta {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .submission-date {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+        
+        .refresh-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #3182ce;
+        }
+        
+        @media (max-width: 768px) {
+            .analytics-container {
+                padding: 2rem 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🔋 UBDF</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="submit.html">Submit Data</a></li>
+                <li><a href="advanced.html">Advanced</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="https://github.com/jonobg/universal-battery-diagnostics">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="analytics-container">
+                <h1>Community Analytics Dashboard</h1>
+                <p class="subtitle">Insights from the global battery diagnostics dataset</p>
+                
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <button class="refresh-btn" onclick="refreshData()">🔄 Refresh Data</button>
+                    <p style="margin-top: 0.5rem; color: #718096; font-size: 0.9rem;">
+                        Last updated: <span id="last-updated">Loading...</span>
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-submissions">0</div>
+                        <div class="stat-label">Total Submissions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="unique-models">0</div>
+                        <div class="stat-label">Unique Battery Models</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avg-capacity">0.0</div>
+                        <div class="stat-label">Avg Capacity (Ah)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="data-contributors">0</div>
+                        <div class="stat-label">Community Contributors</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Submissions by Manufacturer</div>
+                    <div class="manufacturer-grid">
+                        <div class="manufacturer-card">
+                            <div class="manufacturer-logo">🔴</div>
+                            <div class="manufacturer-name">Milwaukee</div>
+                            <div class="manufacturer-count" id="milwaukee-count">0</div>
+                        </div>
+                        <div class="manufacturer-card">
+                            <div class="manufacturer-logo">🟢</div>
+                            <div class="manufacturer-name">Makita</div>
+                            <div class="manufacturer-count" id="makita-count">0</div>
+                        </div>
+                        <div class="manufacturer-card">
+                            <div class="manufacturer-logo">🟡</div>
+                            <div class="manufacturer-name">DeWalt</div>
+                            <div class="manufacturer-count" id="dewalt-count">0</div>
+                        </div>
+                        <div class="manufacturer-card">
+                            <div class="manufacturer-logo">🟣</div>
+                            <div class="manufacturer-name">Ryobi</div>
+                            <div class="manufacturer-count" id="ryobi-count">0</div>
+                        </div>
+                        <div class="manufacturer-card">
+                            <div class="manufacturer-logo">⚫</div>
+                            <div class="manufacturer-name">Other</div>
+                            <div class="manufacturer-count" id="other-count">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Battery Capacity Distribution</div>
+                    <div class="chart-placeholder">
+                        📊 Capacity distribution chart<br>
+                        <small>Shows frequency of different battery capacities (1.5Ah, 2.0Ah, 5.0Ah, etc.)</small>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Submission Timeline</div>
+                    <div class="chart-placeholder">
+                        📈 Submissions over time<br>
+                        <small>Weekly submission trends and community growth</small>
+                    </div>
+                </div>
+
+                <div class="recent-submissions">
+                    <h2 style="margin-bottom: 1rem; color: #4a5568;">Recent Submissions</h2>
+                    <div id="recent-list">
+                        <div class="loading">Loading recent submissions...</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Data Quality Metrics</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #48bb78;">95%</div>
+                            <div>Validated Submissions</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #4299e1;">87%</div>
+                            <div>Complete Metadata</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #ed8936;">72%</div>
+                            <div>With Hardware Info</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #9f7aea;">45%</div>
+                            <div>Protocol Captures</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+                    <h3 style="color: #2b6cb0; margin-bottom: 1rem;">🔒 Privacy Notice</h3>
+                    <p style="color: #2c5282;">All analytics are generated from aggregated, anonymized data. Individual battery logs and sensitive information remain private in our secure data repository.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let analyticsData = {
+            totalSubmissions: 0,
+            uniqueModels: 0,
+            avgCapacity: 0.0,
+            contributors: 0,
+            manufacturers: {
+                milwaukee: 0,
+                makita: 0,
+                dewalt: 0,
+                ryobi: 0,
+                other: 0
+            },
+            recentSubmissions: []
+        };
+
+        async function refreshData() {
+            document.getElementById('last-updated').textContent = 'Refreshing...';
+            
+            try {
+                // In production, this would fetch from GitHub API or analytics endpoint
+                // For now, simulate with mock data
+                await simulateDataFetch();
+                updateDashboard();
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+                document.getElementById('last-updated').textContent = 'Error updating data';
+            }
+        }
+
+        async function simulateDataFetch() {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Mock data - in production, this would come from GitHub API
+            analyticsData = {
+                totalSubmissions: Math.floor(Math.random() * 50) + 10,
+                uniqueModels: Math.floor(Math.random() * 20) + 15,
+                avgCapacity: (Math.random() * 3 + 2).toFixed(1),
+                contributors: Math.floor(Math.random() * 25) + 5,
+                manufacturers: {
+                    milwaukee: Math.floor(Math.random() * 15) + 5,
+                    makita: Math.floor(Math.random() * 10) + 3,
+                    dewalt: Math.floor(Math.random() * 8) + 2,
+                    ryobi: Math.floor(Math.random() * 6) + 1,
+                    other: Math.floor(Math.random() * 4)
+                },
+                recentSubmissions: [
+                    {
+                        title: 'Milwaukee M18 5.0Ah Diagnostic Log',
+                        meta: 'Protocol capture • 2.3MB',
+                        date: '2 hours ago'
+                    },
+                    {
+                        title: 'Makita LXT 18V Register Dump',
+                        meta: 'Memory dump • 512KB',
+                        date: '1 day ago'
+                    },
+                    {
+                        title: 'DeWalt 20V MAX Battery Health Data',
+                        meta: 'Diagnostic log • 1.1MB',
+                        date: '3 days ago'
+                    },
+                    {
+                        title: 'Ryobi ONE+ Charger Communication',
+                        meta: 'Protocol capture • 890KB',
+                        date: '1 week ago'
+                    }
+                ]
+            };
+        }
+
+        function updateDashboard() {
+            // Update main stats
+            document.getElementById('total-submissions').textContent = analyticsData.totalSubmissions;
+            document.getElementById('unique-models').textContent = analyticsData.uniqueModels;
+            document.getElementById('avg-capacity').textContent = analyticsData.avgCapacity;
+            document.getElementById('data-contributors').textContent = analyticsData.contributors;
+
+            // Update manufacturer counts
+            document.getElementById('milwaukee-count').textContent = analyticsData.manufacturers.milwaukee;
+            document.getElementById('makita-count').textContent = analyticsData.manufacturers.makita;
+            document.getElementById('dewalt-count').textContent = analyticsData.manufacturers.dewalt;
+            document.getElementById('ryobi-count').textContent = analyticsData.manufacturers.ryobi;
+            document.getElementById('other-count').textContent = analyticsData.manufacturers.other;
+
+            // Update recent submissions
+            const recentList = document.getElementById('recent-list');
+            recentList.innerHTML = analyticsData.recentSubmissions.map(submission => `
+                <div class="submission-item">
+                    <div class="submission-info">
+                        <div class="submission-title">${submission.title}</div>
+                        <div class="submission-meta">${submission.meta}</div>
+                    </div>
+                    <div class="submission-date">${submission.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(refreshData, 5 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>

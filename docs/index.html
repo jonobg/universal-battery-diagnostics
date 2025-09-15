@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Battery Diagnostics Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        main {
+            margin-top: 80px;
+            padding: 4rem 0;
+        }
+        
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 4rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 0;
+            margin: 4rem 0;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">🔋 UBDF</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="submit.html">Submit Data</a></li>
+                    <li><a href="advanced.html">Advanced</a></li>
+                    <li><a href="analytics.html">Analytics</a></li>
+                    <li><a href="https://github.com/jonobg/universal-battery-diagnostics">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Universal Battery Diagnostics Framework</h1>
+                <p>Community-driven platform for battery protocol reverse-engineering and diagnostics data collection</p>
+                <div class="cta-buttons">
+                    <a href="submit.html" class="btn btn-primary">Submit Battery Data</a>
+                    <a href="advanced.html" class="btn btn-secondary">Technical Documentation</a>
+                </div>
+            </section>
+
+            <section class="stats">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div>
+                            <div class="stat-number" id="submissions-count">0</div>
+                            <div>Community Submissions</div>
+                        </div>
+                        <div>
+                            <div class="stat-number">4</div>
+                            <div>Supported Manufacturers</div>
+                        </div>
+                        <div>
+                            <div class="stat-number">184</div>
+                            <div>Milwaukee M18 Registers</div>
+                        </div>
+                        <div>
+                            <div class="stat-number">100%</div>
+                            <div>Open Source</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Protocol Reverse Engineering</h3>
+                    <p>Based on mnh-jansson's groundbreaking work on Milwaukee M18, Makita, DeWalt, and Ryobi battery protocols. Comprehensive register mapping and communication analysis.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Community Data Collection</h3>
+                    <p>Simple web form for non-technical users and advanced PR workflow for developers. All submissions reviewed and validated before inclusion in the dataset.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛠️</div>
+                    <h3>Advanced Diagnostics</h3>
+                    <p>Health scoring algorithms, usage analytics, charger simulation, and firmware recovery tools. Modular architecture supporting multiple hardware interfaces.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Open Dataset</h3>
+                    <p>Global repository of battery diagnostic logs under version control. Aggregated analytics protect privacy while enabling research and tool development.</p>
+                </div>
+            </section>
+
+            <section style="background: white; padding: 3rem; border-radius: 15px; margin: 3rem 0;">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #4a5568;">Getting Started</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">📱 Battery Owners</h4>
+                        <p>Have a Milwaukee, Makita, DeWalt, or Ryobi battery? Use our simple submission form to contribute diagnostic data to the community dataset.</p>
+                        <a href="submit.html" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Submit Data</a>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">🔧 Technical Users</h4>
+                        <p>Developers and researchers can submit data via Pull Requests, access raw diagnostic tools, and contribute to protocol development.</p>
+                        <a href="advanced.html" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Technical Docs</a>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">📈 Researchers</h4>
+                        <p>Explore aggregated analytics, battery health trends, and protocol insights from our growing community dataset.</p>
+                        <a href="analytics.html" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Analytics</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Universal Battery Diagnostics Framework | Open Source Community Project</p>
+            <p>Built on the research foundation of mnh-jansson and the battery hacking community</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dynamic submission counter (would be populated from GitHub API or analytics)
+        async function updateSubmissionCount() {
+            try {
+                // Placeholder - would fetch from GitHub API or analytics endpoint
+                document.getElementById('submissions-count').textContent = '0';
+            } catch (error) {
+                console.log('Could not fetch submission count');
+            }
+        }
+        
+        updateSubmissionCount();
+    </script>
+</body>
+</html>

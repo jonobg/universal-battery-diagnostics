@@ -1,0 +1,181 @@
+name: Process Form Submission
+
+on:
+  repository_dispatch:
+    types: [form-submission]
+
+jobs:
+  process-submission:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout private data repository
+      uses: actions/checkout@v4
+      with:
+        repository: jonobg/battery-data-collection
+        token: ${{ secrets.DATA_REPO_TOKEN }}
+        path: data-repo
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests python-multipart
+    
+    - name: Process submission data
+      id: process
+      run: |
+        python << 'EOF'
+        import json
+        import os
+        from datetime import datetime
+        import hashlib
+        import re
+        
+        # Get event payload
+        payload = json.loads('''${{ toJSON(github.event.client_payload) }}''')
+        
+        # Generate submission ID
+        timestamp = datetime.utcnow().isoformat() + 'Z'
+        submission_id = hashlib.md5(f"{timestamp}{payload.get('manufacturer', '')}{payload.get('contact', '')}".encode()).hexdigest()[:8]
+        
+        # Create directory structure
+        manufacturer = payload.get('manufacturer', 'unknown')
+        battery_model = re.sub(r'[^\w\-_]', '', payload.get('battery-model', 'unknown'))
+        dir_name = f"{datetime.utcnow().strftime('%Y-%m-%d')}_{manufacturer}_{battery_model}_{submission_id}"
+        
+        submission_dir = f"data-repo/submissions/{dir_name}"
+        os.makedirs(submission_dir, exist_ok=True)
+        os.makedirs(f"{submission_dir}/logs", exist_ok=True)
+        
+        # Create metadata.json
+        metadata = {
+            "submission": {
+                "id": submission_id,
+                "timestamp": timestamp,
+                "source": "web_form",
+                "submitter": {
+                    "contact": payload.get('contact', ''),
+                    "ip_hash": hashlib.sha256(payload.get('ip_address', '').encode()).hexdigest()[:16] if payload.get('ip_address') else ''
+                }
+            },
+            "battery": {
+                "manufacturer": payload.get('manufacturer', ''),
+                "model": payload.get('battery-model', ''),
+                "capacity_ah": float(payload.get('capacity', 0)) if payload.get('capacity') else None,
+                "chemistry": "li-ion"
+            },
+            "device": {
+                "type": payload.get('device-type', ''),
+                "usage_context": "community_submission"
+            },
+            "capture": {
+                "method": "user_upload",
+                "hardware": payload.get('hardware-info', ''),
+                "notes": payload.get('notes', '')
+            },
+            "files": {},
+            "validation": {
+                "status": "pending",
+                "file_checks": []
+            }
+        }
+        
+        # Save metadata
+        with open(f"{submission_dir}/metadata.json", 'w') as f:
+            json.dump(metadata, f, indent=2)
+        
+        # Create README
+        readme_content = f"""# Battery Submission {submission_id}
+
+**Submitted:** {timestamp}
+**Manufacturer:** {payload.get('manufacturer', 'Unknown')}
+**Battery Model:** {payload.get('battery-model', 'Unknown')}
+**Device Type:** {payload.get('device-type', 'Unknown')}
+
+## Files
+
+- `metadata.json` - Structured submission metadata
+- `logs/` - Directory containing uploaded diagnostic files
+
+## Hardware Setup
+
+{payload.get('hardware-info', 'No hardware information provided.')}
+
+## Additional Notes
+
+{payload.get('notes', 'No additional notes provided.')}
+
+---
+*This submission was created via the UBDF web form and requires manual file upload.*
+"""
+        
+        with open(f"{submission_dir}/README.md", 'w') as f:
+            f.write(readme_content)
+        
+        # Output for GitHub Actions
+        print(f"SUBMISSION_DIR={submission_dir}")
+        print(f"SUBMISSION_ID={submission_id}")
+        print(f"MANUFACTURER={manufacturer}")
+        print(f"BATTERY_MODEL={battery_model}")
+        
+        # Write to GitHub Actions output
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            f.write(f"submission_dir={submission_dir}\n")
+            f.write(f"submission_id={submission_id}\n")
+            f.write(f"manufacturer={manufacturer}\n")
+            f.write(f"battery_model={battery_model}\n")
+        EOF
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: data-repo
+        token: ${{ secrets.DATA_REPO_TOKEN }}
+        commit-message: "Add battery submission ${{ steps.process.outputs.submission_id }}"
+        title: "Battery Submission: ${{ steps.process.outputs.manufacturer }} ${{ steps.process.outputs.battery_model }}"
+        body: |
+          ## New Battery Data Submission
+          
+          **Submission ID:** `${{ steps.process.outputs.submission_id }}`
+          **Manufacturer:** ${{ steps.process.outputs.manufacturer }}
+          **Battery Model:** ${{ steps.process.outputs.battery_model }}
+          **Submitted:** ${{ github.event.client_payload.timestamp }}
+          
+          ### Review Checklist
+          
+          - [ ] Metadata is complete and accurate
+          - [ ] File upload instructions sent to submitter
+          - [ ] Data validates against manufacturer specifications
+          - [ ] No sensitive information exposed
+          - [ ] Files are properly formatted
+          
+          ### Next Steps
+          
+          1. Review the metadata in `${{ steps.process.outputs.submission_dir }}/metadata.json`
+          2. Contact submitter for file upload if contact provided
+          3. Validate uploaded files when received
+          4. Merge PR once validation complete
+          
+          ---
+          *Auto-generated from web form submission*
+        branch: submission/${{ steps.process.outputs.submission_id }}
+        delete-branch: true
+    
+    - name: Send email notification (if contact provided)
+      if: github.event.client_payload.contact != ''
+      run: |
+        python << 'EOF'
+        import json
+        import requests
+        
+        payload = json.loads('''${{ toJSON(github.event.client_payload) }}''')
+        
+        if payload.get('contact'):
+            print(f"Would send email to: {payload['contact']}")
+            print("Email would contain instructions for file upload")
+            # In production, integrate with email service like SendGrid, SES, etc.
+        EOF

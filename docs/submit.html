@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Battery Data - UBDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        main {
+            margin-top: 100px;
+            padding: 2rem 0 4rem;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-label {
+            display: block;
+            padding: 12px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+        
+        .file-label:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+        
+        .file-label.dragover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .btn-primary:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-box h3 {
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box p {
+            color: #2c5282;
+            margin: 0;
+        }
+        
+        .required {
+            color: #e53e3e;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin-top: 1rem;
+        }
+        
+        .success {
+            display: none;
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #22543d;
+            text-align: center;
+        }
+        
+        .error {
+            display: none;
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #742a2a;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🔋 UBDF</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="submit.html">Submit Data</a></li>
+                <li><a href="advanced.html">Advanced</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="https://github.com/jonobg/universal-battery-diagnostics">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-container">
+                <h1>Submit Battery Data</h1>
+                <p class="subtitle">Help build the world's largest open battery diagnostics dataset</p>
+                
+                <div class="info-box">
+                    <h3>🔒 Privacy & Data Use</h3>
+                    <p>Your submission is stored in a private repository accessible only to project maintainers. Battery logs are used for research and protocol development. Personal information is not shared publicly.</p>
+                </div>
+
+                <form id="submission-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="manufacturer">Battery Manufacturer <span class="required">*</span></label>
+                        <select id="manufacturer" name="manufacturer" required>
+                            <option value="">Select manufacturer</option>
+                            <option value="milwaukee">Milwaukee</option>
+                            <option value="makita">Makita</option>
+                            <option value="dewalt">DeWalt</option>
+                            <option value="ryobi">Ryobi</option>
+                            <option value="other">Other (specify in notes)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="battery-model">Battery Model/Series</label>
+                        <input type="text" id="battery-model" name="battery-model" 
+                               placeholder="e.g., M18, LXT, 20V MAX, ONE+">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capacity">Battery Capacity (Ah)</label>
+                        <input type="number" id="capacity" name="capacity" step="0.1" 
+                               placeholder="e.g., 5.0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="device-type">Device/Tool Type</label>
+                        <select id="device-type" name="device-type">
+                            <option value="">Select device type</option>
+                            <option value="drill">Drill/Driver</option>
+                            <option value="impact">Impact Driver/Wrench</option>
+                            <option value="saw">Saw (Circular/Reciprocating)</option>
+                            <option value="grinder">Grinder</option>
+                            <option value="light">Light/Flashlight</option>
+                            <option value="charger">Charger Communication</option>
+                            <option value="diagnostic">Diagnostic Tool</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="submission-type">Data Type <span class="required">*</span></label>
+                        <select id="submission-type" name="submission-type" required>
+                            <option value="">Select data type</option>
+                            <option value="diagnostic-log">Battery Diagnostic Log</option>
+                            <option value="protocol-capture">Protocol Communication Capture</option>
+                            <option value="register-dump">Register Memory Dump</option>
+                            <option value="charger-log">Charger Communication Log</option>
+                            <option value="firmware-dump">Firmware/Flash Dump</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="log-file">Upload Log File <span class="required">*</span></label>
+                        <div class="file-upload">
+                            <input type="file" id="log-file" name="log-file" class="file-input" 
+                                   accept=".txt,.log,.csv,.json,.hex,.bin,.cap,.pcap" required>
+                            <label for="log-file" class="file-label">
+                                📁 Click to browse or drag file here<br>
+                                <small>Supported: .txt, .log, .csv, .json, .hex, .bin, .cap, .pcap (max 10MB)</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hardware-info">Hardware/Interface Details</label>
+                        <textarea id="hardware-info" name="hardware-info" 
+                                  placeholder="Describe the hardware setup used to capture this data (e.g., Arduino, UART adapter, oscilloscope, etc.)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" name="notes" 
+                                  placeholder="Any additional context, observations, or technical details about this submission"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact">Contact Email (optional)</label>
+                        <input type="email" id="contact" name="contact" 
+                               placeholder="For follow-up questions about your submission">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        Submit Battery Data
+                    </button>
+                </form>
+
+                <div class="loading" id="loading">
+                    <p>🔄 Submitting your data...</p>
+                </div>
+
+                <div class="success" id="success">
+                    <h3>✅ Submission Successful!</h3>
+                    <p>Thank you for contributing to the battery diagnostics community. Your submission will be reviewed and added to the dataset.</p>
+                </div>
+
+                <div class="error" id="error">
+                    <h3>❌ Submission Failed</h3>
+                    <p id="error-message">There was an error submitting your data. Please try again or contact support.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('submission-form');
+            const fileInput = document.getElementById('log-file');
+            const fileLabel = document.querySelector('.file-label');
+            const submitBtn = document.getElementById('submit-btn');
+            const loading = document.getElementById('loading');
+            const success = document.getElementById('success');
+            const error = document.getElementById('error');
+
+            // File drag and drop handling
+            fileLabel.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            fileLabel.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+
+            fileLabel.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    updateFileLabel();
+                }
+            });
+
+            fileInput.addEventListener('change', updateFileLabel);
+
+            function updateFileLabel() {
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    fileLabel.innerHTML = `📄 ${file.name}<br><small>${(file.size / 1024 / 1024).toFixed(2)} MB</small>`;
+                }
+            }
+
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Hide previous messages
+                success.style.display = 'none';
+                error.style.display = 'none';
+                
+                // Show loading
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+
+                try {
+                    const formData = new FormData(form);
+                    
+                    // This would be replaced with actual GitHub Actions workflow endpoint
+                    // For now, simulate the submission
+                    await simulateSubmission(formData);
+                    
+                    // Show success
+                    loading.style.display = 'none';
+                    success.style.display = 'block';
+                    form.reset();
+                    fileLabel.innerHTML = '📁 Click to browse or drag file here<br><small>Supported: .txt, .log, .csv, .json, .hex, .bin, .cap, .pcap (max 10MB)</small>';
+                    
+                } catch (err) {
+                    loading.style.display = 'none';
+                    error.style.display = 'block';
+                    document.getElementById('error-message').textContent = err.message;
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            async function simulateSubmission(formData) {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // In production, this would POST to GitHub Actions workflow
+                // endpoint that creates a PR in the private battery-data-collection repo
+                
+                // For now, just validate the form
+                const manufacturer = formData.get('manufacturer');
+                const submissionType = formData.get('submission-type');
+                const logFile = formData.get('log-file');
+                
+                if (!manufacturer || !submissionType || !logFile || logFile.size === 0) {
+                    throw new Error('Please fill in all required fields.');
+                }
+                
+                if (logFile.size > 10 * 1024 * 1024) {
+                    throw new Error('File size must be less than 10MB.');
+                }
+                
+                console.log('Form submission data:', {
+                    manufacturer,
+                    submissionType,
+                    fileName: logFile.name,
+                    fileSize: logFile.size
+                });
+            }
+        });
+    </script>
+</body>
+</html>

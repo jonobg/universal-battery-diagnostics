@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Submission - UBDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        main {
+            margin-top: 100px;
+            padding: 2rem 0 4rem;
+        }
+        
+        .content-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 3rem;
+        }
+        
+        h2 {
+            color: #4a5568;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-box {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+        }
+        
+        .step-item {
+            counter-increment: step-counter;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 4rem;
+        }
+        
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            background: #667eea;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 2rem 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .step-item {
+                padding-left: 3rem;
+            }
+            
+            .step-item::before {
+                width: 1.5rem;
+                height: 1.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🔋 UBDF</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="submit.html">Submit Data</a></li>
+                <li><a href="advanced.html">Advanced</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="https://github.com/jonobg/universal-battery-diagnostics">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="content-container">
+                <h1>Advanced Technical Documentation</h1>
+                <p class="subtitle">For developers, researchers, and technical contributors</p>
+                
+                <h2>🚀 Quick Start for Technical Users</h2>
+                
+                <div class="info-box">
+                    <h3>💡 Preferred Method: Pull Request Submission</h3>
+                    <p>Technical users can submit data directly via Pull Requests to our private data collection repository. This method provides better version control and allows for technical discussion.</p>
+                </div>
+
+                <h2>📋 Pull Request Workflow</h2>
+                
+                <div class="step-list">
+                    <div class="step-item">
+                        <h3>Request Access to Private Repository</h3>
+                        <p>Contact the project maintainers by creating an issue in the public repository requesting access to <code>jonobg/battery-data-collection</code>. Include your GitHub username and brief background.</p>
+                        <a href="https://github.com/jonobg/universal-battery-diagnostics/issues/new" class="btn btn-primary">Request Access</a>
+                    </div>
+                    
+                    <div class="step-item">
+                        <h3>Clone the Data Collection Repository</h3>
+                        <div class="code-block">git clone https://github.com/jonobg/battery-data-collection.git
+cd battery-data-collection</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <h3>Create Submission Branch</h3>
+                        <div class="code-block">git checkout -b submission/milwaukee-m18-5ah-$(date +%Y%m%d)</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <h3>Add Your Data Files</h3>
+                        <p>Create a new directory under <code>submissions/</code> with the following structure:</p>
+                        <div class="code-block">submissions/
+└── YYYY-MM-DD_manufacturer_model/
+    ├── metadata.json
+    ├── logs/
+    │   ├── diagnostic_log.txt
+    │   ├── protocol_capture.pcap
+    │   └── register_dump.hex
+    └── README.md</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <h3>Create Metadata File</h3>
+                        <p>Use this JSON template for <code>metadata.json</code>:</p>
+                        <div class="code-block">{
+  "submission": {
+    "id": "unique-submission-id",
+    "timestamp": "2025-09-15T10:00:00Z",
+    "submitter": {
+      "github_username": "your-username",
+      "email": "optional@example.com"
+    }
+  },
+  "battery": {
+    "manufacturer": "milwaukee",
+    "model": "M18",
+    "capacity_ah": 5.0,
+    "chemistry": "li-ion",
+    "part_number": "48-11-1850",
+    "manufacturing_date": "2024-03",
+    "condition": "used"
+  },
+  "device": {
+    "type": "drill",
+    "model": "M18 FUEL",
+    "usage_context": "diagnostic_test"
+  },
+  "capture": {
+    "method": "uart_sniffer",
+    "hardware": "Arduino Uno + Logic Level Converter",
+    "software": "custom_logger_v2.py",
+    "sampling_rate": "115200_baud",
+    "duration_minutes": 15
+  },
+  "files": {
+    "diagnostic_log.txt": {
+      "type": "ascii_log",
+      "description": "Battery register dump during charging cycle"
+    },
+    "protocol_capture.pcap": {
+      "type": "packet_capture", 
+      "description": "Raw UART communication between battery and charger"
+    },
+    "register_dump.hex": {
+      "type": "hex_dump",
+      "description": "Complete memory dump from battery MCU"
+    }
+  }
+}</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <h3>Create Pull Request</h3>
+                        <div class="code-block">git add .
+git commit -m "Add Milwaukee M18 5.0Ah diagnostic data"
+git push origin submission/milwaukee-m18-5ah-$(date +%Y%m%d)</div>
+                        <p>Then create a Pull Request with detailed description of your submission.</p>
+                    </div>
+                </div>
+
+                <h2>🛠️ Hardware Setup Examples</h2>
+                
+                <h3>Arduino-Based UART Sniffer</h3>
+                <div class="code-block">// Basic Arduino sketch for battery communication logging
+#include &lt;SoftwareSerial.h&gt;
+
+SoftwareSerial batterySerial(2, 3);  // RX, TX pins
+
+void setup() {
+  Serial.begin(115200);
+  batterySerial.begin(9600);  // Adjust based on battery protocol
+  Serial.println("Battery Communication Logger Started");
+}
+
+void loop() {
+  if (batterySerial.available()) {
+    String data = batterySerial.readString();
+    Serial.print(millis());
+    Serial.print(",");
+    Serial.println(data);
+  }
+}</div>
+
+                <h3>USB Logic Analyzer Setup</h3>
+                <div class="info-box">
+                    <p><strong>Recommended Tools:</strong></p>
+                    <ul>
+                        <li>Saleae Logic Analyzer (8-channel minimum)</li>
+                        <li>DSLogic series (open source alternative)</li>
+                        <li>PulseView + sigrok for data analysis</li>
+                    </ul>
+                </div>
+
+                <h2>📊 Data Format Specifications</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Type</th>
+                            <th>Extension</th>
+                            <th>Description</th>
+                            <th>Tools</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Diagnostic Logs</td>
+                            <td>.txt, .log</td>
+                            <td>Human-readable battery register dumps</td>
+                            <td>Text editor, grep, awk</td>
+                        </tr>
+                        <tr>
+                            <td>Protocol Captures</td>
+                            <td>.pcap, .cap</td>
+                            <td>Raw communication packets</td>
+                            <td>Wireshark, tcpdump</td>
+                        </tr>
+                        <tr>
+                            <td>Memory Dumps</td>
+                            <td>.hex, .bin</td>
+                            <td>Binary firmware/register dumps</td>
+                            <td>hexdump, objdump, IDA</td>
+                        </tr>
+                        <tr>
+                            <td>CSV Data</td>
+                            <td>.csv</td>
+                            <td>Structured time-series measurements</td>
+                            <td>Excel, Python pandas</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>🔬 Using the UBDF Framework</h2>
+                
+                <h3>Installation</h3>
+                <div class="code-block">git clone https://github.com/jonobg/universal-battery-diagnostics.git
+cd universal-battery-diagnostics
+pip install -r requirements.txt</div>
+
+                <h3>Milwaukee M18 Protocol Example</h3>
+                <div class="code-block">from ubdf.hardware.manufacturers.milwaukee import M18Protocol
+
+# Initialize protocol handler
+protocol = M18Protocol(port='/dev/ttyUSB0')
+
+# Read battery diagnostics
+diagnostics = protocol.read_diagnostics()
+print(f"Battery Health: {diagnostics.health_percentage}%")
+print(f"Cycle Count: {diagnostics.cycle_count}")
+print(f"Temperature: {diagnostics.temperature_c}°C")
+
+# Dump all registers
+register_data = protocol.dump_all_registers()
+with open('m18_register_dump.json', 'w') as f:
+    json.dump(register_data, f, indent=2)</div>
+
+                <h3>Makita NEC 78K0 Flash Utility</h3>
+                <div class="code-block">from ubdf.hardware.manufacturers.makita import NEC78K0Flasher
+
+# Initialize flasher
+flasher = NEC78K0Flasher(port='/dev/ttyUSB0')
+
+# Read firmware from battery
+firmware = flasher.read_firmware()
+with open('makita_firmware.hex', 'wb') as f:
+    f.write(firmware)
+
+# Verify battery communication
+if flasher.verify_connection():
+    print("Battery MCU responding correctly")</div>
+
+                <h2>⚡ Protocol Analysis Tools</h2>
+                
+                <div class="success-box">
+                    <h3>🎯 Recommended Analysis Workflow</h3>
+                    <ol>
+                        <li><strong>Capture</strong> - Use logic analyzer or UART sniffer</li>
+                        <li><strong>Decode</strong> - Apply manufacturer-specific protocol parsers</li>
+                        <li><strong>Analyze</strong> - Extract register mappings and health data</li>
+                        <li><strong>Validate</strong> - Cross-reference with known battery models</li>
+                        <li><strong>Submit</strong> - Share findings with community</li>
+                    </ol>
+                </div>
+
+                <h3>Protocol Decoder Scripts</h3>
+                <div class="code-block"># Milwaukee M18 packet decoder
+python scripts/decode_milwaukee.py --input capture.pcap --output decoded.json
+
+# Makita LXT register parser  
+python scripts/parse_makita.py --hex-dump battery.hex --format json
+
+# Generic battery health analyzer
+python scripts/analyze_health.py --log-file diagnostics.txt --manufacturer milwaukee</div>
+
+                <h2>🤝 Contributing to Protocol Development</h2>
+                
+                <div class="warning-box">
+                    <h3>⚠️ Important Notes</h3>
+                    <ul>
+                        <li>Always follow responsible disclosure for security vulnerabilities</li>
+                        <li>Respect manufacturer intellectual property and terms of service</li>
+                        <li>Test modifications on dedicated development batteries only</li>
+                        <li>Document hardware modifications and safety precautions</li>
+                    </ul>
+                </div>
+
+                <h3>Research Areas</h3>
+                <ul>
+                    <li><strong>Register Mapping</strong> - Decode unknown register functions</li>
+                    <li><strong>Health Algorithms</strong> - Improve battery health scoring</li>
+                    <li><strong>Protocol Extensions</strong> - Add support for new manufacturers</li>
+                    <li><strong>Firmware Analysis</strong> - Reverse engineer battery MCU firmware</li>
+                    <li><strong>Hardware Interfaces</strong> - Design better diagnostic tools</li>
+                </ul>
+
+                <div class="info-box">
+                    <h3>📚 Additional Resources</h3>
+                    <ul>
+                        <li><a href="https://github.com/jonobg/universal-battery-diagnostics/wiki">Project Wiki</a></li>
+                        <li><a href="https://github.com/jonobg/universal-battery-diagnostics/discussions">Community Discussions</a></li>
+                        <li><a href="https://github.com/jonobg/universal-battery-diagnostics/blob/main/docs/PROTOCOL_SPECS.md">Protocol Specifications</a></li>
+                        <li><a href="https://github.com/jonobg/universal-battery-diagnostics/blob/main/docs/HARDWARE_SETUP.md">Hardware Setup Guide</a></li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="submit.html" class="btn btn-primary">Use Simple Form Instead</a>
+                    <a href="https://github.com/jonobg/universal-battery-diagnostics/issues" class="btn btn-secondary">Get Support</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
